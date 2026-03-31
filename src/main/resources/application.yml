@@ -3,6 +3,8 @@ server:
   servlet:
     context-path: /api
 spring:
+  profiles:
+    active: local
   application:
     name: gu-picture-backend
   # 数据库配置
