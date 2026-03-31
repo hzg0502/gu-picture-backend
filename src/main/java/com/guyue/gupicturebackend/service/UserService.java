@@ -1,10 +1,14 @@
 package com.guyue.gupicturebackend.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.guyue.gupicturebackend.model.dto.user.UserQueryRequest;
 import com.guyue.gupicturebackend.model.entity.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.guyue.gupicturebackend.model.vo.LoginUserVO;
+import com.guyue.gupicturebackend.model.vo.UserVO;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
 * @author qzzq
@@ -62,5 +66,35 @@ public interface UserService extends IService<User> {
      * @return
      */
     boolean userLogout(HttpServletRequest request);
+
+    /**
+     * 获取用户脱敏信息
+     * @param user 脱敏前的信息
+     * @return 脱敏后的信息
+     */
+    UserVO getUserVO(User user);
+
+    /**
+     * 批量获取用户脱敏信息
+     * @param userList 脱敏前的信息
+     * @return 脱敏后的 List 列表
+     */
+    List<UserVO> getUserVOList(List<User> userList);
+
+    /**
+     * 获取查询条件
+     *
+     * @param userQueryRequest 查询条件
+     * @return 查询条件
+     */
+    QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
+
+    /**
+     * 是否为管理员
+     *
+     * @param user
+     * @return
+     */
+    boolean isAdmin(User user);
 
 }
