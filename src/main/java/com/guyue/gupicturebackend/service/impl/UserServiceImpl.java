@@ -22,7 +22,6 @@ import org.springframework.util.DigestUtils;
 import javax.servlet.http.HttpServletRequest;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,7 +65,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 4.插入数据
         User user = new User();
         user.setUserAccount(userAccount);
-        user.setUserPassword(userPassword);
+        user.setUserPassword(encryptPassword);
         user.setUserName("无名");
         user.setUserRole(UserRoleEnum.USER.getValue());
         boolean saveResult = this.save(user);
@@ -93,7 +92,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         // 查询用户是否存在
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("userAccount", userAccount);
-        queryWrapper.eq("userPassword", userPassword);
+        queryWrapper.eq("userPassword", encryptPassword);
         User user = this.baseMapper.selectOne(queryWrapper);
         if (user == null) {
             log.info("user login failed, userAccount cannot match userPassword");

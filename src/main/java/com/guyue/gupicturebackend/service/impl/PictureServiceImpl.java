@@ -33,10 +33,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -50,8 +48,8 @@ import java.util.stream.Collectors;
 
 /**
  * @author qzzq
- * @description 针对表【picture(图片)】的数据库操作Service实现
- * @createDate 2026-03-28 16:48:57
+ * &#064;description  针对表【picture(图片)】的数据库操作Service实现
+ * &#064;createDate  2026-03-28 16:48:57
  */
 @Slf4j
 @Service
@@ -69,16 +67,16 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
 
     @Resource
     private UrlPictureUpload urlPictureUpload;
-    @Autowired
+    @Resource
     private CosManager cosManager;
 
     /**
      * 上传图片
      *
-     * @param inputSource
-     * @param pictureUploadRequest
-     * @param loginUser
-     * @return
+     * @param inputSource 图片源
+     * @param pictureUploadRequest 图片上传请求
+     * @param loginUser 登录用户
+     * @return 图片信息
      */
     @Override
     public PictureVO uploadPicture(Object inputSource, PictureUploadRequest pictureUploadRequest, User loginUser) {
@@ -257,8 +255,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     /**
      * 图片审核
      *
-     * @param pictureReviewRequest
-     * @param loginUser
+     * @param pictureReviewRequest 图片审核请求
+     * @param loginUser 登录用户
      */
     @Override
     public void doPictureReview(PictureReviewRequest pictureReviewRequest, User loginUser) {

@@ -43,7 +43,7 @@ public class FileManager {
      *
      * @param multipartFile    文件
      * @param uploadPathPrefix 上传路径前缀
-     * @return
+     * @return 上传结果
      */
     public UploadPictureResult uploadPicture(MultipartFile multipartFile, String uploadPathPrefix) {
         // 校验图片

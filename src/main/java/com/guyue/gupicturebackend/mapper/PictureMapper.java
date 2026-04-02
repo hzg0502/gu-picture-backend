@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
 /**
 * @author qzzq
-* @description 针对表【picture(图片)】的数据库操作Mapper
-* @createDate 2026-03-28 16:48:57
-* @Entity com.guyue.gupicturebackend.model.entity.Picture
-*/
+* &#064;description   针对表【picture(图片)】的数据库操作 Mapper
+* &#064;date  2026-03-28 16:48:57
+* &#064;Entity  com.guyue.gupicturebackend.model.entity.Picture
+ */
 public interface PictureMapper extends BaseMapper<Picture> {
 
 }

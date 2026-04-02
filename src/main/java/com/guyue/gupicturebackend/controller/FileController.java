@@ -30,7 +30,7 @@ public class FileController {
      * 测试文件上传  
      *
      * @param multipartFile 上传的文件 
-     * @return 
+     * @return  文件路径
      */
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     @PostMapping("/test/upload")
@@ -82,7 +82,7 @@ public class FileController {
             response.getOutputStream().write(bytes);
             response.getOutputStream().flush();
         } catch (Exception e) {
-            log.error("file download error, filepath = " + filepath, e);
+            log.error("file download error, filepath = {}", filepath, e);
             throw new BusinessException(ErrorCode.SYSTEM_ERROR, "下载失败");
         } finally {
             if (cosObjectInput != null) {
