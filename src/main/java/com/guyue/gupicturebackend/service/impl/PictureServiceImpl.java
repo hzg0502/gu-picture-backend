@@ -9,6 +9,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.guyue.gupicturebackend.exception.BusinessException;
 import com.guyue.gupicturebackend.exception.ErrorCode;
 import com.guyue.gupicturebackend.exception.ThrowUtils;
+import com.guyue.gupicturebackend.manager.CosManager;
 import com.guyue.gupicturebackend.manager.upload.FilePictureUpload;
 import com.guyue.gupicturebackend.manager.upload.PictureUploadTemplate;
 import com.guyue.gupicturebackend.manager.upload.UrlPictureUpload;
@@ -32,6 +33,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -46,14 +49,14 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
-* @author qzzq
-* @description 针对表【picture(图片)】的数据库操作Service实现
-* @createDate 2026-03-28 16:48:57
-*/
+ * @author qzzq
+ * @description 针对表【picture(图片)】的数据库操作Service实现
+ * @createDate 2026-03-28 16:48:57
+ */
 @Slf4j
 @Service
 public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
-    implements PictureService{
+        implements PictureService {
 
     @Resource
     private FileManager fileManager;
@@ -66,6 +69,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
 
     @Resource
     private UrlPictureUpload urlPictureUpload;
+    @Autowired
+    private CosManager cosManager;
 
     /**
      * 上传图片
@@ -107,8 +112,9 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         // 构造要入库的图片信息
         Picture picture = new Picture();
         picture.setUrl(uploadPictureResult.getUrl());
-        String picName = uploadPictureResult.getPicFormat();
-        if (pictureUploadRequest != null && StrUtil.isNotBlank(pictureUploadRequest.getPicName())){
+        picture.setThumbnailUrl(uploadPictureResult.getThumbnailUrl());
+        String picName = uploadPictureResult.getPicName();
+        if (pictureUploadRequest != null && StrUtil.isNotBlank(pictureUploadRequest.getPicName())) {
             picName = pictureUploadRequest.getPicName();
         }
         picture.setName(picName);
@@ -250,6 +256,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
 
     /**
      * 图片审核
+     *
      * @param pictureReviewRequest
      * @param loginUser
      */
@@ -313,7 +320,7 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         Elements imgElementList = div.select("img.mimg");
         int uploadCount = 0;
         String namePrefix = pictureUploadByBatchRequest.getNamePrefix();
-        if (StrUtil.isBlank(namePrefix)){
+        if (StrUtil.isBlank(namePrefix)) {
             namePrefix = searchText;
         }
         for (Element imgElement : imgElementList) {
@@ -347,7 +354,29 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         return uploadCount;
     }
 
-
+    @Async
+    @Override
+    public void clearPictureFile(Picture oldPicture) {
+        // 判断该图片是否被多条记录使用
+        String pictureUrl = oldPicture.getUrl();
+        long count = this.lambdaQuery()
+                .eq(Picture::getUrl, pictureUrl)
+                .count();
+        // 有不止一条记录在使用该图片， 不清理
+        if (count > 1) {
+            return;
+        }
+        // FIXME 注意，这里的 url 包含了域名， 实际上只要传 key 值（存储路径）就可以了
+        // 假设 pictureUrl = "https://xxx.cos.ap-beijing.myqcloud.com/images/picture123.jpg"
+        // String key = pictureUrl.replace(cosClientConfig.getDomainPrefix(), "");
+        // cosManager.deleteObject(key);
+        cosManager.deleteObject(pictureUrl);
+        // 清理缩略图
+        String thumbnailUrl = oldPicture.getThumbnailUrl();
+        if (StrUtil.isNotBlank(thumbnailUrl)) {
+            cosManager.deleteObject(thumbnailUrl);
+        }
+    }
 }
 
 
