@@ -2,10 +2,7 @@ package com.guyue.gupicturebackend.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.guyue.gupicturebackend.model.dto.picture.PictureQueryRequest;
-import com.guyue.gupicturebackend.model.dto.picture.PictureReviewRequest;
-import com.guyue.gupicturebackend.model.dto.picture.PictureUploadByBatchRequest;
-import com.guyue.gupicturebackend.model.dto.picture.PictureUploadRequest;
+import com.guyue.gupicturebackend.model.dto.picture.*;
 import com.guyue.gupicturebackend.model.entity.Picture;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.guyue.gupicturebackend.model.entity.User;
@@ -69,4 +66,21 @@ public interface PictureService extends IService<Picture> {
      */
     void clearPictureFile(Picture oldPicture);
 
+    void checkPictureAuth(User loginUser, Picture picture);
+
+    /**
+     * 删除图片
+     *
+     * @param pictureId 图片 id
+     * @param loginUser 登录用户
+     */
+    void deletePicture(long pictureId, User loginUser);
+
+    /**
+     * 编辑图片
+     *
+     * @param pictureEditRequest 图片编辑请求
+     * @param loginUser 登录用户
+     */
+    void editPicture(PictureEditRequest pictureEditRequest, User loginUser);
 }
