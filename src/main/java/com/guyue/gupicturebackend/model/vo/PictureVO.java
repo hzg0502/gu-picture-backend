@@ -59,9 +59,14 @@ public class PictureVO implements Serializable {
   
     /**  
      * 图片高度  
-     */  
-    private Integer picHeight;  
-  
+     */
+    private Integer picHeight;
+
+    /**
+     * 图片主色调
+     */
+    private String picColor;
+
     /**  
      * 图片比例  
      */  

@@ -22,9 +22,14 @@ public class UploadPictureResult {
   
     /**  
      * 文件体积  
-     */  
-    private Long picSize;  
-  
+     */
+    private Long picSize;
+
+    /**
+     * 图片主色调
+     */
+    private String picColor;
+
     /**  
      * 图片宽度  
      */  
